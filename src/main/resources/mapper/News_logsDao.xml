@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.news.dao.News_logsDao">
+
+	<select id="SelectCount" resultType="java.lang.Integer">
+		SELECT COUNT(1) from news_log
+	</select>
+	<select id="SelectByPage" resultType="map">
+	   	SELECT l.*,u.user_name  from news_log l LEFT JOIN user_info u ON u.user_id=l.user_id ORDER 
+		BY log_id desc LIMIT ${startNo},${pageSize}
+	</select>
+	<insert id="InsertBySelect">
+		INSERT INTO news_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="create_time !=null">
+				create_time,
+			</if>
+			<if test="ip_address !=null">
+				ip_address,
+			</if>
+			<if test="doing !=null">
+				doing,
+			</if>
+			<if test="user_id !=null">
+				user_id,
+			</if>
+			<if test="is_flag !=null">
+				is_flag,
+			</if>
+			<if test="log_name !=null">
+				log_name,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="create_time !=null">
+				#{create_time},
+			</if>
+			<if test="ip_address !=null">
+				#{ip_address},
+			</if>
+			<if test="doing !=null">
+				#{doing},
+			</if>
+			<if test="user_id !=null">
+				#{user_id},
+			</if>
+			<if test="is_flag !=null">
+				#{is_flag},
+			</if>
+			<if test="log_name !=null">
+				#{log_name},
+			</if>
+		</trim>
+	</insert>
+	<delete id="DelectByLog_id">
+		DELETE from news_log WHERE log_id=#{log_id}
+	</delete>
+</mapper>

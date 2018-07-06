@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.news.dao.Role_InfoDao">
+
+	<select id="SelectByIds" resultType="com.news.entity.Role_Info">
+		select * from role_info where role_id in
+		<foreach collection="role_ids" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach>
+	</select>
+	<select id="SelectByParentIds" resultType="com.news.entity.Role_Info">
+		select * from role_info where role_parent =#{role_parent}
+	</select>
+	<select id="SelectAll" resultType="com.news.entity.Role_Info">
+		select * from role_info where role_parent is not null
+	</select>
+	<select id="SelectParentAll" resultType="com.news.entity.Role_Info">
+		select * from role_info where role_parent is null
+	</select>
+	<delete id="DelectByRole_Id">
+		DELETE from role_info where role_id=#{role_id}
+	</delete>
+	<select id="SelectByRole_Id" resultType="com.news.entity.Role_Info">
+		select * from role_info where role_id=${role_id}
+	</select>
+	<insert id="InsertBySelect">
+		INSERT INTO role_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="role_id  !=null">
+				role_id,
+			</if>
+			<if test="role_parent !=null">
+				role_parent,
+			</if>
+			<if test="role_name !=null">
+				role_name,
+			</if>
+			<if test="role_url !=null">
+				role_url,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="role_id  !=null">
+				#{role_id},
+			</if>
+			<if test="role_parent !=null">
+				#{role_parent},
+			</if>
+			<if test="role_name !=null">
+				#{role_name},
+			</if>
+			<if test="role_url !=null">
+				#{role_url},
+			</if>
+		</trim>
+	</insert>
+	<update id="UpdateBySelect">
+		UPDATE role_info
+		<set>
+			<if test="role_parent !=null">
+				role_parent=#{role_parent},
+			</if>
+			<if test="role_name !=null">
+				role_name=#{role_name},
+			</if>
+			<if test="role_url !=null">
+				role_url=#{role_url},
+			</if>
+		</set>
+		where role_id=${role_id}
+	</update>
+	<select id="SelectByParetanduser" resultType="com.news.entity.Role_Info">
+	SELECT role_parent,role_name from  role_info WHERE role_id  in
+		<foreach collection="role_ids" item="id" index="index" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</select>
+		<select id="SelectByParetanduser2" resultType="com.news.entity.Role_Info">
+	SELECT role_id,role_name from  role_info WHERE role_id  in
+		<foreach collection="role_ids" item="id" index="index" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</select>
+	<select id="SelectByusercRols" resultType="com.news.entity.Role_Info">
+	select * from role_info where role_parent=#{role_parent} and role_id in
+		<foreach collection="role_ids" item="id" index="index" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</select>
+	<select id="SelectOtherRoles" resultType="com.news.entity.Role_Info">
+	select * from role_info where role_parent is not null
+		<if test="otherrole !=null and otherrole.size()">
+		and role_id  in
+		<foreach collection="otherrole" item="id" index="index" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+		</if>
+		and  role_id not in
+		<foreach collection="grole" item="id" index="index" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</select>
+</mapper>

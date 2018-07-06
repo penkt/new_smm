@@ -1,0 +1,56 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%String path = request.getContextPath();
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+		+ path + "/";
+request.setAttribute("ctx",basePath);
+%>
+<%@taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="${ctx}/public/layui/css/layui.css" />
+<script type="text/javascript" src="${ctx}/public/layui/layui.js"></script> 
+<script type="text/javascript" src="${ctx}/public/js/jquery-1.9.1.min.js"></script> 
+<title>Insert title here</title>
+</head>
+<body>
+<input type="hidden" value="${ctx}" id="basePath">
+<table class="layui-table">
+  <colgroup>
+    <col width="150">
+    <col width="200">
+    <col>
+  </colgroup>
+  <thead>
+    <tr>
+      <th>新闻名称</th>
+      <th>发布作者</th>
+      <th>发布时间</th>
+      <th>状态</th>
+      <th>我要审核</th>
+    </tr> 
+  </thead>
+  <tbody>
+   <c:forEach items="${map.news}" var="new_info">
+    <tr>
+      <td>${new_info.news_name}</td>
+      <td>${new_info.user_name}</td>
+      <td><fmt:formatDate value="${new_info.create_time}" pattern="yyyy-MM-dd hh:mm"/></td>
+      <td><c:if test="${new_info.is_flag==1}">通过</c:if><c:if test="${new_info.is_flag==0}">待审</c:if><c:if test="${new_info.is_flag==-1}">拒审</c:if> </td>
+      <td> 
+        <button  class="layui-btn"><a href="${ctx}/login/shnews/${new_info.news_id}">审核</a></button>
+      </td>
+    </tr>
+    </c:forEach>
+    <tr>
+     <td colspan="5">
+    <jsp:include page="../pageutil.jsp"></jsp:include>
+    </td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

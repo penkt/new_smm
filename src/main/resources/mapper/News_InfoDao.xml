@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.news.dao.News_InfoDao">
+
+	<select id="SelectCount" resultType="java.lang.Integer">
+		SELECT COUNT(1) from
+		news_info
+	</select>
+	<select id="SelectByPage" resultType="map">
+		SELECT n.*,u.user_name from 	news_info n LEFT JOIN user_info u ON n.user_id=u.user_id
+		<if test="user_id !=null">
+			WHERE n.user_id=#{user_id}
+		</if>
+		ORDER BY news_id desc LIMIT ${startNo},${pageSize}
+	</select>
+	<delete id="DelectByNews_id">
+		DELETE from news_info WHERE news_id=#{news_id}
+	</delete>
+	<select id="SelectByNes_id" resultType="com.news.entity.News_Info">
+		SELECT * from news_info
+		WHERE news_id=#{news_id}
+	</select>
+	<insert id="InsertBySelect">
+		INSERT INTO news_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="user_id !=null ">
+				user_id,
+			</if>
+			<if test="news_title !=null ">
+				news_title,
+			</if>
+			<if test="news_name !=null ">
+				news_name,
+			</if>
+			<if test="news_desc !=null ">
+				news_desc,
+			</if>
+			<if test="news_keywords !=null ">
+				news_keywords,
+			</if>
+			<if test="create_time !=null ">
+				create_time,
+			</if>
+			<if test="news_content !=null ">
+				news_content,
+			</if>
+			<if test="is_flag !=null ">
+				is_flag,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="user_id !=null ">
+				#{user_id},
+			</if>
+			<if test="news_title !=null ">
+				#{news_title},
+			</if>
+			<if test="news_name !=null ">
+				#{news_name},
+			</if>
+			<if test="news_desc !=null ">
+				#{news_desc},
+			</if>
+			<if test="news_keywords !=null ">
+				#{news_keywords},
+			</if>
+			<if test="create_time !=null ">
+				#{create_time},
+			</if>
+			<if test="news_content !=null ">
+				#{news_content},
+			</if>
+			<if test="is_flag !=null ">
+				#{is_flag},
+			</if>
+		</trim>
+	</insert>
+	<update id="UpdateBySelect">
+		UPDATE news_info
+		<set>
+			<if test="user_id !=null ">
+				user_id=#{user_id},
+			</if>
+			<if test="news_title !=null ">
+				news_title= #{news_title},
+			</if>
+			<if test="news_name !=null ">
+				news_name= #{news_name},
+			</if>
+			<if test="news_desc !=null ">
+				news_desc= #{news_desc},
+			</if>
+			<if test="news_keywords !=null ">
+				news_keywords= #{news_keywords},
+			</if>
+			<if test="create_time !=null ">
+				create_time=#{create_time},
+			</if>
+			<if test="news_content !=null ">
+				news_content= #{news_content},
+			</if>
+			<if test="is_flag !=null ">
+				is_flag=#{is_flag},
+			</if>
+		</set>
+		WHERE news_id=#{news_id}
+	</update>
+	<select id="SelectNextPage" resultType="java.lang.Integer">
+		SELECT min(news_id) FROM
+		news_info WHERE news_id &gt; #{news_id}
+	</select>
+	<select id="SelectPrevPage" resultType="java.lang.Integer">
+		SELECT max(news_id) FROM
+		news_info WHERE news_id &lt; #{news_id}
+	</select>
+</mapper>
